@@ -2,39 +2,29 @@
 
 ## Overview
 
-This project explores the design and analysis of coplanar waveguide (CPW) transmission lines and resonators for superconducting quantum hardware.
-
-The goal is to develop a practical understanding of microwave transmission lines, characteristic impedance, electromagnetic propagation, and resonator behavior through analytical calculations, Python-based analysis, and electromagnetic simulation.
+This project studies coplanar waveguide (CPW) transmission lines and quarter-wave resonators for superconducting quantum hardware.
 
 ## Objectives
 
-* Understand the geometry and operating principles of coplanar waveguides.
-* Calculate characteristic impedance and effective permittivity.
-* Analyze the propagation of microwave signals along a CPW transmission line.
-* Design a quarter-wave (\(\lambda/4\)) CPW resonator for a target resonance frequency.
-* Investigate how geometrical and material parameters affect device performance.
-* Compare analytical predictions with electromagnetic simulation results.
+- Understand CPW geometry and microwave transmission-line behavior.
+- Estimate characteristic impedance, propagation velocity, and resonator dimensions.
+- Explore design parameters through Python analysis.
+- Compare analytical estimates with electromagnetic simulation.
 
 ## Methodology
 
-The project will be developed in stages:
-
-1. **Theory:** Review CPW geometry, transmission-line properties, and resonator fundamentals.
-2. **Analytical design:** Calculate characteristic impedance, phase velocity, and resonator dimensions.
-3. **Python implementation:** Develop scripts for calculations and parameter sweeps.
-4. **Results and analysis:** Visualize the results and investigate design trade-offs.
-5. **Electromagnetic simulation:** Validate the analytical design using an appropriate simulation tool.
+The work will progress from theory and analytical design to Python analysis, visualization, and electromagnetic simulation.
 
 ## Tools
 
-* Python
-* NumPy and Matplotlib
-* Electromagnetic simulation tools (planned)
+Python, NumPy, Matplotlib, and an electromagnetic simulation tool (planned).
 
 ## Project Status
 
-In progress.
+In progress. Theory and analysis will be documented as the project develops.
 
-## Scope
+## Documentation
 
-This is an independent technical project developed for learning, engineering analysis, and professional portfolio development. Design assumptions, calculations, and simulation results will be documented as the project progresses.
+- [CPW Fundamentals](docs/cpw_fundamentals.md)
+- [Transmission Line Theory](docs/transmission_line_theory.md)
+- [Quarter-Wave Resonators](docs/quarter_wave_resonators.md)
