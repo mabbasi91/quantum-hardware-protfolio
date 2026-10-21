@@ -1,10 +1,12 @@
 # CPW Transmission Line Theory
 
+**Part 2 of 3** · [← Previous: CPW Fundamentals](01_cpw_fundamentals.md) · [Project overview](../README.md) · Next: [CPW Resonators →](03_cpw_resonators.md)
+
 ## Introduction to the transmission-line model
 
 A CPW is a *distributed* structure. A voltage or current disturbance does not appear everywhere along it at once; it travels at a finite speed. A lumped circuit model ignores this travel time, which is a good approximation only when the circuit is much smaller than the wavelength. A 6 GHz CPW resonator on silicon is about 5 mm long, a quarter of the guided wavelength, so the travel time matters and the line must be treated as distributed.
 
-When the cross-section and materials are uniform along the line and the dominant mode is quasi-TEM (see [CPW Fundamentals](cpw_fundamentals.md)), the three-dimensional field problem reduces to a one-dimensional **transmission-line model**. This model captures propagation, reflection, and power flow while keeping the finite travel time.
+When the cross-section and materials are uniform along the line and the dominant mode is quasi-TEM (see [CPW Fundamentals](01_cpw_fundamentals.md)), the three-dimensional field problem reduces to a one-dimensional **transmission-line model**. This model captures propagation, reflection, and power flow while keeping the finite travel time.
 
 Let $z$ be the position along the line, increasing from source toward load, and $t$ be time. The line voltage $V(z,t)$ is the potential of the center conductor relative to the grounds at position $z$. The line current $I(z,t)$ is the current on the center conductor in the $+z$ direction; an equal and opposite return current flows on the grounds.
 
@@ -101,7 +103,7 @@ $$
 Z_0 = \sqrt{\frac{L'}{C'}} ,
 $$
 
-which is real. $Z_0$ measures the balance between magnetic and electric energy storage: increasing $L'$ (for example, through kinetic inductance) raises $Z_0$; increasing $C'$ (a wider center strip or narrower gaps) lowers it. For a CPW, $L'$ and $C'$ are set by the cross-section; closed-form conformal-mapping expressions are given in [CPW Fundamentals](cpw_fundamentals.md#quasi-static-design-equations).
+which is real. $Z_0$ measures the balance between magnetic and electric energy storage: increasing $L'$ (for example, through kinetic inductance) raises $Z_0$; increasing $C'$ (a wider center strip or narrower gaps) lowers it. For a CPW, $L'$ and $C'$ are set by the cross-section; closed-form conformal-mapping expressions are given in [CPW Fundamentals](01_cpw_fundamentals.md#quasi-static-design-equations).
 
 ## Propagation constant and wave velocity
 
@@ -125,17 +127,9 @@ $$
 
 The phase velocity is independent of frequency, so the line is dispersion-free and the group velocity equals the phase velocity. With frequency-dependent $L'$, $C'$, or significant loss, the two velocities differ.
 
-For a nonmagnetic quasi-TEM CPW with negligible kinetic inductance,
+This connects directly to the effective permittivity of [CPW Fundamentals](01_cpw_fundamentals.md#quasi-tem-propagation): for a nonmagnetic CPW without kinetic inductance, $c^2 L'C' = \varepsilon_\mathrm{eff}$. If the inductance includes a kinetic part, $L' = L_m' + L_k'$, the phase velocity drops by a further factor $\sqrt{1 - \alpha_k}$, where $\alpha_k = L_k'/L'$ is the kinetic-inductance fraction.
 
-$$
-v_\mathrm{p} = \frac{c}{\sqrt{\varepsilon_\mathrm{eff}}},
-\qquad
-\varepsilon_\mathrm{eff} = c^2 L' C' ,
-$$
-
-where $c = 1/\sqrt{\mu_0\varepsilon_0}$. When kinetic inductance is significant, write $L' = L_m' + L_k'$ (magnetic plus kinetic). The phase velocity is still $1/\sqrt{L'C'}$, but it is now lower than $c/\sqrt{\varepsilon_\mathrm{eff}}$ by a factor $\sqrt{1 - \alpha_k}$, where $\alpha_k = L_k'/L'$ is the kinetic-inductance fraction. In that case $c^2 L'C'$ is an effective index squared and no longer a purely dielectric quantity.
-
-**Summary for the reference geometry** ($w = 10$ µm, $s = 6$ µm on silicon, from the worked example in [CPW Fundamentals](cpw_fundamentals.md)): $L' \approx 424$ nH/m, $C' \approx 163$ pF/m, $Z_0 \approx 51$ Ω, and $v_\mathrm{p} \approx 0.40\,c$.
+**Summary for the reference geometry** ($w = 10$ µm, $s = 6$ µm on silicon, from the worked example in [CPW Fundamentals](01_cpw_fundamentals.md)): $L' \approx 424$ nH/m, $C' \approx 163$ pF/m, $Z_0 \approx 51$ Ω, and $v_\mathrm{p} \approx 0.40\,c$.
 
 ## Terminated lines: reflection and input impedance
 
@@ -177,14 +171,14 @@ $$
 
 ![Input reactance of open and shorted stubs](figures/stub_input_impedance.png)
 
-*Figure 3. Input reactance of lossless shorted and open stubs. A shorted stub behaves like an inductor when short ($\ell < \lambda/4$) and its reactance diverges at $\ell = \lambda/4$. An open stub behaves like a capacitor when short and has a series-resonance zero at $\ell = \lambda/4$.*
+*Figure 3. Input reactance of lossless shorted and open stubs. A shorted stub behaves like an inductor when short and its reactance diverges at $\ell = \lambda/4$. An open stub behaves like a capacitor when short, passes through zero at $\ell = \lambda/4$, and diverges at $\ell = \lambda/2$.*
 
-The pole of $Z_\mathrm{in}^\mathrm{short}$ at $\beta\ell = \pi/2$ is the key result for this project. A quarter-wavelength section shorted at one end presents an open circuit at the other end. Near that frequency it behaves exactly like a parallel *LC* circuit. This is the **quarter-wave resonator**, analyzed in [Quarter-Wave Resonators](quarter_wave_resonators.md). Two related tools follow from the same equation:
+The poles of these input impedances are the key result for this project. A quarter-wavelength section shorted at one end ($\beta\ell = \pi/2$) presents an open circuit at its other end, and so does a half-wavelength section that is itself open at the far end ($\beta\ell = \pi$). Near these frequencies each section behaves exactly like a parallel *LC* circuit. These are the **quarter-wave** and **half-wave resonators**, analyzed in [CPW Resonators](03_cpw_resonators.md). Two related tools follow from the same equations:
 
 - **Quarter-wave transformer.** For $\beta\ell = \pi/2$, $Z_\mathrm{in} = Z_0^2/Z_L$. A quarter-wave section with $Z_0 = \sqrt{Z_1 Z_2}$ matches two impedances at one frequency.
 - **Short stubs as lumped elements.** A shorted stub with $\beta\ell \ll 1$ is an inductor, $L \approx L'\ell$. An open stub is a capacitor, $C \approx C'\ell$. This is how compact on-chip reactances are often made.
 
-## Loss mechanisms
+## Loss and quality factor
 
 For a low-loss line ($R' \ll \omega L'$ and $G' \ll \omega C'$), expanding $\gamma$ to first order gives
 
@@ -204,18 +198,13 @@ $$
 
 With $\tan\delta = 10^{-6}$, a typical value for the participation-weighted loss of a good silicon CPW at low power, $Q_d = 10^6$. This connection between distributed attenuation and resonator $Q$ is what makes CPW resonators sensitive probes of material loss.
 
-Physical contributions to loss include:
-
-- **Conductor loss.** Joule heating in normal metals. In superconductors, loss comes from the real part of the surface impedance, set by thermal or non-equilibrium quasiparticles, vortices, and film defects. Superconductivity does not imply zero microwave loss.
-- **Dielectric loss.** Absorption in the substrate and, typically dominant in superconducting devices, in amorphous surface and interface layers that host two-level-system (TLS) defects. TLS loss decreases at high microwave power and higher temperature.
-- **Radiation and mode conversion.** Bends, discontinuities, finite grounds, and package cavities can radiate or excite slotline and box modes. The two-conductor RLGC model does not capture these. They can be lumped into an effective loss term but often need full-wave analysis.
-- **Other mechanisms.** Substrate conduction, trapped magnetic flux, lossy seams in the package, and infrared or cosmic-ray-generated quasiparticles.
+The physical origins of $R'$ and $G'$ in a superconducting CPW (two-level systems, quasiparticles, vortices, radiation) are discussed in [CPW Fundamentals](01_cpw_fundamentals.md#loss-channels).
 
 ## Practical design interpretation
 
 The RLGC parameters summarize how a given cross-section stores and dissipates energy. Geometry (center width, gap, thickness, ground extent) sets $L'$ and $C'$ through the field distribution, and with it $Z_0$ and $v_\mathrm{p}$. Materials set $R'$ (through the surface impedance), $G'$ (through the participation-weighted loss tangents), and the kinetic part of $L'$. These quantities are coupled: changing the geometry moves both electric and magnetic fields, so no single dimension controls impedance or loss independently.
 
-Analytical RLGC models are best for uniform sections and for identifying trends. They become inaccurate for strongly non-uniform structures, dispersive materials, finite grounds and package boundaries, thick conductors with shaped edges, and situations with radiation or mode conversion. Full-wave simulation is the right tool for these cases and for realistic launches, couplers, bends, and packages. Simulations should be checked for mesh and boundary convergence. They use superconducting and dielectric material models that must themselves be validated against measurement.
+The RLGC model assumes a uniform line. Where that breaks down (bends, couplers, finite grounds, packages), full-wave simulation is needed; see [Limitations of the simplified picture](01_cpw_fundamentals.md#limitations-of-the-simplified-picture).
 
 ## References
 
@@ -224,3 +213,7 @@ Analytical RLGC models are best for uniform sections and for identifying trends.
 3. G. Ghione and C. U. Naldi, "Coplanar waveguides for MMIC applications: effect of upper shielding, conductor backing, finite-extent ground planes, and line-to-line coupling," *IEEE Transactions on Microwave Theory and Techniques* **35**, 260–267 (1987). [https://doi.org/10.1109/TMTT.1987.1133637](https://doi.org/10.1109/TMTT.1987.1133637)
 4. J. Gao, *The Physics of Superconducting Microwave Resonators*, Ph.D. thesis, California Institute of Technology (2008). [https://doi.org/10.7907/RAT0-VM75](https://doi.org/10.7907/RAT0-VM75)
 5. W. Woods et al., "Determining interface dielectric losses in superconducting coplanar-waveguide resonators," *Physical Review Applied* **12**, 014012 (2019). [https://doi.org/10.1103/PhysRevApplied.12.014012](https://doi.org/10.1103/PhysRevApplied.12.014012)
+
+---
+
+**Part 2 of 3** · [← Previous: CPW Fundamentals](01_cpw_fundamentals.md) · [Project overview](../README.md) · Next: [CPW Resonators →](03_cpw_resonators.md)

@@ -304,22 +304,72 @@ def fig_stub_input_impedance():
 # ---------------------------------------------------------------------------
 
 
-def fig_qw_modes():
-    u = np.linspace(0, 1, 400)  # position from open end (0) to shorted end (1)
+def _mode_figure(kind):
+    """Voltage and current standing waves of the first three modes of one resonator type."""
+    u = np.linspace(0, 1, 400)  # position along the resonator, z / ell
     fig, axes = plt.subplots(1, 3, figsize=(10, 2.8), sharey=True)
     for ax, n in zip(axes, (1, 2, 3)):
-        k = (2 * n - 1) * np.pi / 2
+        if kind == "half":
+            k = n * np.pi
+            m = "" if n == 1 else str(n)
+            title = rf"$n = {n}$:  $\ell = {m}\lambda_{n}/2$,  $f_{n} = {m}f_1$"
+            ticks = ["0\nopen", "1\nopen"]
+        else:
+            k = (2 * n - 1) * np.pi / 2
+            m = "" if n == 1 else str(2 * n - 1)
+            title = rf"$n = {n}$:  $\ell = {m}\lambda_{n}/4$,  $f_{n} = {m}f_1$"
+            ticks = ["0\nopen", "1\nshort"]
         ax.plot(u, np.cos(k * u), label=r"voltage $V$")
         ax.plot(u, np.sin(k * u), label=r"current $I$", ls="--")
         ax.axhline(0, color="0.6", lw=0.6)
-        m = "" if n == 1 else str(2 * n - 1)
-        ax.set_title(rf"$n = {n}$:  $\ell = {m}\lambda_{n}/4$,  $f_{n} = {m}f_1$")
+        ax.set_title(title)
+        ax.set_xticks([0, 1], ticks)
         ax.set_xlabel(r"position $z/\ell$")
-        ax.set_xticks([0, 1], ["0\nopen", "1\nshort"])
     axes[0].set_ylabel("normalised amplitude")
     axes[0].legend(frameon=False, fontsize=8, loc="lower left")
     fig.tight_layout()
-    fig.savefig(FIG_DIR / "qw_mode_profiles.png")
+    fig.savefig(FIG_DIR / f"{'hw' if kind == 'half' else 'qw'}_mode_profiles.png")
+    plt.close(fig)
+
+
+def fig_resonator_modes():
+    _mode_figure("half")
+    _mode_figure("quarter")
+
+
+def fig_hw_layout():
+    """Schematic top view of an in-line (transmission) half-wave resonator."""
+    fig, ax = plt.subplots(figsize=(7, 3.4))
+    gnd, gap = "#c9a227", "white"
+    ax.add_patch(Rectangle((0, 0), 10, 6, color=gnd))
+
+    # Symmetric meander between the two coupling gaps (x = 1.9 and x = 7.9).
+    res = [(2.0, 5.0), (3.0, 5.0), (3.0, 1.2), (4.2, 1.2), (4.2, 4.0), (5.6, 4.0),
+           (5.6, 1.2), (6.8, 1.2), (6.8, 5.0), (7.8, 5.0)]
+    slot = [(0, 5.0)] + res + [(10, 5.0)]
+    xs, ys = zip(*slot)
+    ax.plot(xs, ys, color=gap, lw=9, solid_capstyle="butt", solid_joinstyle="miter")
+    for piece in ([(0, 5.0), (1.82, 5.0)], res, [(7.98, 5.0), (10, 5.0)]):
+        xs, ys = zip(*piece)
+        ax.plot(xs, ys, color=gnd, lw=3, solid_capstyle="butt", solid_joinstyle="miter")
+
+    for x in (1.91, 7.89):
+        ax.annotate(r"$C_\kappa$", (x, 5.1), (x, 5.75), ha="center", fontsize=9,
+                    arrowprops=dict(arrowstyle="->", lw=0.7))
+    ax.text(0.9, 5.35, "input", ha="center", fontsize=8)
+    ax.text(9.1, 5.35, "output", ha="center", fontsize=8)
+    ax.plot(4.9, 4.0, "o", color="#c0392b", ms=5, zorder=5)
+    ax.annotate("midpoint:\ncurrent antinode,\nvoltage node", (4.9, 4.0), (7.15, 2.3),
+                fontsize=8, arrowprops=dict(arrowstyle="->", lw=0.7))
+    ax.annotate("open end:\nvoltage antinode", (2.05, 4.95), (0.15, 3.0), fontsize=8,
+                arrowprops=dict(arrowstyle="->", lw=0.7))
+    ax.text(3.6, 0.35, r"meandered length $\ell \approx \lambda/2$", ha="center", fontsize=8)
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 6.3)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.set_title("In-line half-wave CPW resonator (schematic, not to scale)", fontsize=10)
+    fig.savefig(FIG_DIR / "hw_inline_layout.png")
     plt.close(fig)
 
 
@@ -390,6 +440,27 @@ def fig_s21_notch():
     plt.close(fig)
 
 
+def fig_s21_inline():
+    f0 = 6.0e9
+    qi = 2.0e5
+    detune = np.linspace(-6, 6, 2001)
+    f = f0 * (1 + detune / qi)
+    cases = [(qi / 5, "over-coupled  $Q_c = Q_i/5$"), (qi, "critically coupled  $Q_c = Q_i$"), (5 * qi, "under-coupled  $Q_c = 5Q_i$")]
+
+    fig, ax = plt.subplots(figsize=(5.5, 3.2))
+    for qc, label in cases:
+        ql = 1 / (1 / qi + 1 / qc)
+        s21 = (ql / qc) / (1 + 2j * ql * (f - f0) / f0)
+        ax.plot(detune, 20 * np.log10(np.abs(s21)), label=label)
+    ax.set_xlabel(r"$(f - f_0)\,Q_i/f_0$")
+    ax.set_ylabel(r"$|S_{21}|$ (dB)")
+    ax.set_ylim(-30, 1)
+    ax.legend(frameon=False, fontsize=7.5, loc="lower right")
+    ax.set_title(r"Ideal in-line response, $Q_i = 2\times10^5$", fontsize=10)
+    fig.savefig(FIG_DIR / "s21_inline_response.png")
+    plt.close(fig)
+
+
 # ---------------------------------------------------------------------------
 # Worked example printed to stdout (numbers quoted in the docs)
 # ---------------------------------------------------------------------------
@@ -402,25 +473,33 @@ def worked_example():
     lp = z0 / vp
     cp = 1 / (z0 * vp)
     f0 = 6.0e9
-    ell = vp / (4 * f0)
     w0 = 2 * np.pi * f0
-    c_eq = np.pi / (4 * w0 * z0)
-    l_eq = 1 / (w0**2 * c_eq)
     z_feed = 50.0
     print(f"w = 10 um, s = 6 um, Si, h = 500 um")
     print(f"  eps_eff = {eps_eff:.3f}, Z0 = {z0:.2f} ohm, v_p = {vp / C0:.4f} c = {vp:.4e} m/s")
     print(f"  L' = {lp * 1e9:.1f} nH/m, C' = {cp * 1e12:.1f} pF/m")
-    print(f"quarter-wave at {f0 / 1e9:.1f} GHz: length = {ell * 1e3:.3f} mm")
-    print(f"  equivalent parallel LC: C = {c_eq * 1e15:.1f} fF, L = {l_eq * 1e9:.3f} nH")
-    for qc in (1e4, 1e5):
-        cc = np.sqrt(np.pi / (2 * w0**2 * z_feed * z0 * qc))
-        print(f"  Qc = {qc:.0e}: coupling capacitance Cc = {cc * 1e15:.2f} fF")
+
+    # Equivalent parallel LC seen at a voltage antinode: C = C' ell / 2 for both types.
+    for name, ell in (("half-wave", vp / (2 * f0)), ("quarter-wave", vp / (4 * f0))):
+        c_eq = cp * ell / 2
+        l_eq = 1 / (w0**2 * c_eq)
+        print(f"{name} at {f0 / 1e9:.1f} GHz: length = {ell * 1e3:.3f} mm")
+        print(f"  equivalent parallel LC: C = {c_eq * 1e15:.1f} fF, L = {l_eq * 1e9:.3f} nH")
+        # Qc = C / (w0 Cc^2 R_ext): hanger sees Z_feed/2; symmetric in-line has two ports of Z_feed.
+        for qc in (1e4, 1e5):
+            cc_hanger = np.sqrt(2 * c_eq / (w0 * qc * z_feed))
+            line = f"  Qc = {qc:.0e}: hanger Cc = {cc_hanger * 1e15:.2f} fF"
+            if name == "half-wave":
+                cc_inline = np.sqrt(c_eq / (2 * w0 * qc * z_feed))
+                line += f", in-line Cc (each end) = {cc_inline * 1e15:.2f} fF"
+            print(line)
+        print(f"  pull from 2.08 fF at the open end: {-f0 * 2.08e-15 / (2 * c_eq) / 1e6:.1f} MHz")
     for alpha in (0.02, 0.1):
-        print(f"  kinetic-inductance fraction {alpha}: f shifts to {f0 * np.sqrt(1 - alpha) / 1e9:.3f} GHz")
+        print(f"kinetic-inductance fraction {alpha}: 6 GHz shifts to {f0 * np.sqrt(1 - alpha) / 1e9:.3f} GHz")
     ql, qc, p_dbm = 1e5, 2e5, -140
     p = 1e-3 * 10 ** (p_dbm / 10)
     n_ph = 2 * ql**2 * p / (qc * HBAR * w0**2)
-    print(f"  photon number at {p_dbm} dBm, Ql = {ql:.0e}, Qc = {qc:.0e}: <n> = {n_ph:.1f}")
+    print(f"hanger photon number at {p_dbm} dBm, Ql = {ql:.0e}, Qc = {qc:.0e}: <n> = {n_ph:.1f}")
 
 
 def main():
@@ -430,9 +509,11 @@ def main():
     fig_rlgc_segment()
     fig_standing_waves()
     fig_stub_input_impedance()
-    fig_qw_modes()
+    fig_resonator_modes()
+    fig_hw_layout()
     fig_qw_layout()
     fig_s21_notch()
+    fig_s21_inline()
     worked_example()
     print(f"figures written to {FIG_DIR}")
 
