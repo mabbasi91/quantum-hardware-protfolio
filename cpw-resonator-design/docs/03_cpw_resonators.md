@@ -292,7 +292,7 @@ Target: a 6.0 GHz resonator on high-resistivity silicon, using the 50 Ω geometr
 | Frequency pull from 2.1 fF at an open end | ≈ −7.6 MHz | ≈ −15 MHz |
 | Frequency with 2 % kinetic inductance | 5.94 GHz | 5.94 GHz |
 
-All numbers are reproduced by [`scripts/generate_doc_figures.py`](../scripts/generate_doc_figures.py). The few-femtofarad coupling capacitances explain why hanger couplers are usually distributed elbows running alongside the feedline, and why in-line resonators switch from gap to finger capacitors when strong coupling is needed.
+All numbers are reproduced by [`figures/generate_doc_figures.py`](figures/generate_doc_figures.py). The few-femtofarad coupling capacitances explain why hanger couplers are usually distributed elbows running alongside the feedline, and why in-line resonators switch from gap to finger capacitors when strong coupling is needed.
 
 ### Layout and fabrication
 

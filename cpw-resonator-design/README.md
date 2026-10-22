@@ -36,17 +36,17 @@ In progress. The theory documentation is complete; analysis notebooks and simula
 ```text
 cpw-resonator-design/
 ├── README.md
-├── docs/
-│   ├── 01_cpw_fundamentals.md
-│   ├── 02_transmission_line_theory.md
-│   ├── 03_cpw_resonators.md
-│   └── figures/                  # generated figures used in the docs
-└── scripts/
-    └── generate_doc_figures.py   # regenerates all figures and worked-example numbers
+└── docs/
+    ├── 01_cpw_fundamentals.md
+    ├── 02_transmission_line_theory.md
+    ├── 03_cpw_resonators.md
+    └── figures/
+        ├── generate_doc_figures.py   # regenerates all figures and worked-example numbers
+        └── *.png                     # generated figures used in the docs
 ```
 
 To regenerate the figures (requires NumPy and Matplotlib):
 
 ```bash
-python3 cpw-resonator-design/scripts/generate_doc_figures.py
+python3 cpw-resonator-design/docs/figures/generate_doc_figures.py
 ```

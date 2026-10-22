@@ -1,9 +1,9 @@
 """Generate the figures used in the cpw-resonator-design documentation.
 
 Run from anywhere:
-    python3 cpw-resonator-design/scripts/generate_doc_figures.py
+    python3 cpw-resonator-design/docs/figures/generate_doc_figures.py
 
-Figures are written to cpw-resonator-design/docs/figures/. Only NumPy and
+Figures are written next to this script, in cpw-resonator-design/docs/figures/. Only NumPy and
 Matplotlib are required.
 """
 
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Rectangle
 
-FIG_DIR = Path(__file__).resolve().parents[1] / "docs" / "figures"
+FIG_DIR = Path(__file__).resolve().parent
 
 C0 = 299_792_458.0  # speed of light in vacuum, m/s
 HBAR = 1.054_571_817e-34  # reduced Planck constant, J s
