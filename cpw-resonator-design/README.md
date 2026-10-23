@@ -19,11 +19,11 @@ The work moves from theory and analytical design to Python analysis, visualizati
 
 ## Tools
 
-Python, NumPy, Matplotlib, and an electromagnetic simulation tool (planned).
+Python, NumPy, Matplotlib, gdsfactory and QPDK (layout), and an electromagnetic simulation tool (planned).
 
 ## Project Status
 
-In progress. The theory documentation is complete; analysis notebooks and simulation are next.
+In progress. The theory documentation and the resonator layout are complete; electromagnetic simulation is next.
 
 ## Documentation
 
@@ -36,14 +36,20 @@ In progress. The theory documentation is complete; analysis notebooks and simula
 ```text
 cpw-resonator-design/
 ├── README.md
-└── docs/
-    ├── 01_cpw_fundamentals.md
-    ├── 02_transmission_line_theory.md
-    ├── 03_cpw_resonators.md
-    └── figures/
-        ├── generate_doc_figures.py   # regenerates all figures and worked-example numbers
-        └── *.png                     # generated figures used in the docs
+├── docs/
+│   ├── 01_cpw_fundamentals.md
+│   ├── 02_transmission_line_theory.md
+│   ├── 03_cpw_resonators.md
+│   └── figures/
+│       ├── generate_doc_figures.py   # regenerates all figures and worked-example numbers
+│       └── *.png                     # generated figures used in the docs
+└── layout/                           # GDS layout of a 6 GHz inductively coupled quarter-wave resonator
+    ├── parameters.py                 # design parameters + analytical CPW model
+    ├── make_layout.py                # gdsfactory/QPDK layout script
+    └── quarter_wave_resonator.gds    # output (plus .png preview)
 ```
+
+The layout is described in [layout/README.md](layout/README.md). The layout scripts need gdsfactory and QPDK; the pinned versions are in the repository's [`requirements.txt`](../requirements.txt).
 
 To regenerate the figures (requires NumPy and Matplotlib):
 
