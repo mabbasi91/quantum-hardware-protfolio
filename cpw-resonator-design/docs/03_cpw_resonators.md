@@ -13,7 +13,7 @@ In practice, the terminations are an **open circuit**, where the center conducto
 | Open end | $\Gamma = +1$ | antinode (maximum) | node (zero) | electric (capacitive) |
 | Shorted end | $\Gamma = -1$ | node (zero) | antinode (maximum) | magnetic (inductive) |
 
-A wave that makes one round trip along the resonator picks up a phase $2\beta\ell$ from propagation and is multiplied by the two end reflection coefficients $\Gamma_1$ and $\Gamma_2$. Resonance requires it to return in phase with itself:
+For ideal lossless terminations with $|\Gamma_1|=|\Gamma_2|=1$, a wave making one round trip accumulates a propagation phase $-2\beta\ell$ and is multiplied by the end reflection coefficients $\Gamma_1$ and $\Gamma_2$. The resonance condition is that the round-trip factor have phase $2\pi m$:
 
 $$
 \Gamma_1\Gamma_2\,e^{-2j\beta\ell} = 1 .
@@ -28,7 +28,7 @@ Both are workhorses of circuit quantum electrodynamics (circuit QED) [6]. They s
 
 ### Lumped-element equivalent
 
-Near a single resonance $\omega_n$, either resonator, seen from a voltage antinode (an open end), behaves like a parallel *RLC* circuit [1, 6]:
+Near an isolated resonance $\omega_n$, a bare, uniform, low-loss resonator viewed at a voltage antinode (an open end) can be represented by a parallel *RLC* circuit [1, 6]:
 
 $$
 C = \frac{C'\ell}{2},
@@ -38,23 +38,23 @@ L_n = \frac{1}{\omega_n^2 C},
 R = \frac{Z_0}{\alpha\ell}.
 $$
 
-The equivalent capacitance is half the total line capacitance for every mode and both types, because the voltage varies sinusoidally along the line and its mean square is half the peak value. The equivalent circuit is the standard interface to circuit-QED models: each mode is a harmonic oscillator with $\omega_n = 1/\sqrt{L_n C}$, and couplings to qubits or feedlines follow from $C$ and the coupling capacitances. The explicit values of $C$ and $L$ for each type are given in its own section below.
+For the ideal sinusoidal mode profiles, the equivalent capacitance is half the total line capacitance for every nonzero mode of either type: the spatial mean of the squared voltage profile is one half its peak value. This mode normalization neglects end loading, dispersion, and departures from a uniform line. The equivalent circuit is the standard interface to circuit-QED models: each mode is a harmonic oscillator with $\omega_n = 1/\sqrt{L_n C}$, and couplings to qubits or feedlines follow from $C$ and the coupling capacitances. The explicit values of $C$ and $L$ for each type are given in its own section below.
 
 ## Quality Factors and Coupling
 
-A resonator loses energy through internal mechanisms and through its intentional coupling to the measurement circuit. Each loss channel defines a quality factor $Q = \omega_0 \times (\text{stored energy})/(\text{power lost})$:
+A resonator loses energy through internal mechanisms and through its intentional coupling to the measurement circuit. Each loss channel defines a quality factor $Q = \omega_0 U/P$, where $U$ is the cycle-averaged stored energy and $P$ is the average power dissipated through that channel:
 
 - **Internal quality factor $Q_i$.** Losses in the resonator itself: dielectric (TLS), conductor, radiation, and others ([CPW Fundamentals](01_cpw_fundamentals.md#loss-channels)). $1/Q_i = \sum_k 1/Q_k$.
 - **Coupling (external) quality factor $Q_c$.** Energy leaking out through all coupling ports.
 - **Loaded quality factor $Q_l$.** The total, $1/Q_l = 1/Q_i + 1/Q_c$. It sets the linewidth $\kappa/2\pi = f_0/Q_l$.
 
-A small coupling capacitor $C_c$ in series with an external load $R_\mathrm{ext}$ appears across the resonator as a large parallel resistance $\approx 1/(\omega_0^2 C_c^2 R_\mathrm{ext})$. This gives a general result for capacitive coupling at a voltage antinode:
+For weak capacitive coupling, with $\omega_0 C_c R_\mathrm{ext}\ll1$, a coupling capacitor $C_c$ in series with a resistive load $R_\mathrm{ext}$ presents an approximate parallel resistance $R_p\approx1/(\omega_0^2 C_c^2 R_\mathrm{ext})$ at the resonator. For a lumped coupler at a voltage antinode this gives:
 
 $$
 Q_c \approx \frac{C}{\omega_0\,C_c^2\,R_\mathrm{ext}},
 $$
 
-where $C$ is the resonator's equivalent capacitance. The external load $R_\mathrm{ext}$ depends on the coupling scheme: in-line for half-wave resonators, hanger for quarter-wave. Because $Q_c \propto 1/C_c^2$, small changes in coupler geometry produce large changes in $Q_c$.
+where $C$ is the resonator's equivalent capacitance. Here $Q_c$ is the combined external quality factor for all ports, and $C$ is the mode-equivalent capacitance. The local load depends on the coupling topology: a series in-line port sees approximately $Z_\mathrm{f}$, while a hanger coupled to a through line sees approximately $Z_\mathrm{f}/2$ because power can leave in both directions. Because $Q_c \propto 1/C_c^2$ in this weak-coupling limit, small changes in coupler geometry can produce large changes in $Q_c$.
 
 The ratio $Q_c/Q_i$ sets the **coupling regime**:
 
@@ -70,7 +70,7 @@ Real measurements include cable delay, amplitude and phase background, and imped
 
 ### Geometry and coupling
 
-A half-wave resonator has the same termination at both ends. The common **open–open** version is a length of CPW whose center conductor is interrupted by a coupling gap at each end. The **short–short** version has both ends grounded and the voltage and current profiles swapped. It is used less often and is not discussed further here.
+A half-wave resonator has the same termination at both ends. The common **open–open** version is a length of CPW whose center conductor is interrupted by a coupling gap at each end. A **short–short** version also has a half-wave fundamental, but its voltage nodes and current antinodes occur at the terminations rather than the voltage antinodes of the open–open case; it is not discussed further here.
 
 The natural way to use an open–open resonator is **in-line**: coupling capacitors $C_\kappa$ at the two ends connect it to an input and an output feedline, and the signal is measured in transmission *through* the resonator. This was the original circuit-QED geometry [6].
 
@@ -101,7 +101,7 @@ $$
 
 *Figure 2. Voltage and current standing waves of the first three modes of an open–open half-wave resonator. Every integer harmonic is allowed, and both ends are always voltage antinodes.*
 
-In the fundamental mode, the voltage is maximal and of opposite sign at the two ends, and the current is maximal at the center. Both ends are therefore good places for capacitive coupling, for example to two qubits in a quantum bus, and the center is the place for inductive coupling. The center is also a voltage node for all odd modes, so a DC or low-frequency bias line connected there barely perturbs the fundamental.
+In the fundamental mode, the voltage is maximal and of opposite sign at the two ends, and the current is maximal at the center. Both ends are therefore good places for capacitive coupling, for example to two qubits in a quantum bus, and the center is the place for inductive coupling. The center is a voltage node for odd modes, so capacitive loading there can be reduced; any bias line still needs to be designed for its inductive loading, loss, and coupling to other modes.
 
 ### Resonant frequency and equivalent circuit
 
@@ -111,7 +111,7 @@ f_n = n\,\frac{v_\mathrm{p}}{2\ell} = n\,\frac{c}{2\ell\sqrt{\varepsilon_\mathrm
 f_0 \equiv f_1 = \frac{v_\mathrm{p}}{2\ell}.
 $$
 
-The spectrum contains every harmonic, $f_0, 2f_0, 3f_0, \ldots$ For the fundamental, the general equivalent circuit gives
+For an ideal uniform, nondispersive line with ideal terminations, the spectrum contains every harmonic, $f_0, 2f_0, 3f_0, \ldots$ For the fundamental, the general equivalent circuit gives
 
 $$
 C = \frac{\pi}{2\omega_0 Z_0},
@@ -123,7 +123,7 @@ $$
 
 ### In-line coupling and transmission response
 
-With symmetric couplers $C_\kappa$ at each end, each port loads the resonator with $R_\mathrm{ext} = Z_\mathrm{f}$, the feedline impedance. The two ports add, giving
+In the weak-coupling lumped-capacitor approximation, symmetric couplers $C_\kappa$ at the two ends each see $R_\mathrm{ext}\approx Z_\mathrm{f}$, the feedline impedance. The two external decay channels add, giving
 
 $$
 Q_c = \frac{C}{2\omega_0 C_\kappa^2 Z_\mathrm{f}} = \frac{\pi}{4\omega_0^2 C_\kappa^2 Z_\mathrm{f} Z_0}.
@@ -135,7 +135,7 @@ $$
 S_{21} = \frac{Q_l/Q_c}{1 + 2jQ_l\,\dfrac{f - f_0}{f_0}} .
 $$
 
-On resonance, the transmission is $Q_l/Q_c = Q_i/(Q_i + Q_c)$. For unequal input and output couplers, the peak becomes $2Q_l/\sqrt{Q_{c,1}Q_{c,2}}$, where $Q_{c,1}$ and $Q_{c,2}$ are the coupling quality factors of the two ports.
+For the ideal symmetric two-port model with real coupling quality factors, the on-resonance transmission amplitude is $Q_l/Q_c=Q_i/(Q_i+Q_c)$, where $Q_c^{-1}=Q_{c,1}^{-1}+Q_{c,2}^{-1}$. For unequal ports the peak amplitude is $2Q_l/\sqrt{Q_{c,1}Q_{c,2}}$, with $Q_{c,1}$ and $Q_{c,2}$ defined per port.
 
 ![In-line S21 response](figures/s21_inline_response.png)
 
@@ -147,7 +147,7 @@ Gap capacitors give only a few femtofarads. When stronger coupling is needed, as
 
 ### Geometry and coupling
 
-A quarter-wave resonator is a length of CPW with one **open** end and one **shorted** end, where the center conductor merges into the ground plane. The shortest line that satisfies a voltage antinode at one end and a voltage node at the other is a quarter wavelength long. This is half the length of a half-wave resonator at the same frequency, which is the main reason quarter-wave resonators are popular for frequency-multiplexed readout, where many resonators share one chip.
+A quarter-wave resonator is a length of CPW with one **open** end and one **shorted** end, where the center conductor merges into the ground plane. Under ideal open- and short-circuit boundary conditions, the fundamental has a voltage antinode at the open end and a voltage node at the short, with a quarter guided wavelength between them. Its line length is half that of a half-wave resonator at the same frequency; the compact length and convenient hanger coupling make quarter-wave designs useful for frequency-multiplexed readout.
 
 The natural way to use a quarter-wave resonator is as a **hanger**: the open end runs alongside a through feedline, and the resonator removes power from the feedline at resonance.
 
@@ -188,7 +188,7 @@ f_n = (2n - 1)\,\frac{v_\mathrm{p}}{4\ell} = (2n - 1)\,\frac{c}{4\ell\sqrt{\vare
 f_0 \equiv f_1 = \frac{v_\mathrm{p}}{4\ell}.
 $$
 
-The spectrum contains only odd harmonics, $f_0, 3f_0, 5f_0, \ldots$ For the fundamental,
+For an ideal uniform, nondispersive line with ideal terminations, the spectrum contains only odd harmonics, $f_0, 3f_0, 5f_0, \ldots$ For the fundamental,
 
 $$
 C = \frac{\pi}{4\omega_0 Z_0},
@@ -208,7 +208,7 @@ $$
 Q_c = \frac{2C}{\omega_0 C_c^2 Z_\mathrm{f}} = \frac{\pi}{2\omega_0^2 C_c^2 Z_\mathrm{f} Z_0}.
 $$
 
-Elbow couplers like the one in Figure 4 are distributed and also have an inductive component, so in practice $Q_c$ is extracted from simulation. Inductive coupling at the shorted end is an alternative, often used for qubit readout and Purcell filters.
+Elbow couplers like the one in Figure 4 are distributed and can have both capacitive and inductive coupling. Design estimates may come from electromagnetic simulation; for fabricated devices, $Q_c$ is commonly extracted by fitting the measured complex $S_{21}$ response. Inductive coupling at the shorted end is an alternative, often used for qubit readout and Purcell filters.
 
 Away from resonance the feedline transmits fully. Near resonance the resonator absorbs and re-radiates power out of phase, giving a **dip** in $S_{21}$:
 
@@ -216,7 +216,7 @@ $$
 S_{21} = 1 - \frac{Q_l/Q_c}{1 + 2jQ_l\,\dfrac{f - f_0}{f_0}} .
 $$
 
-On resonance $S_{21}(f_0) = Q_l/Q_i$, so the dip depth shows the coupling regime directly. In the complex plane, $S_{21}$ traces a circle of diameter $Q_l/Q_c$ that touches the off-resonance point $(1, 0)$. Impedance mismatch around the coupler makes the resonance asymmetric, which fitting methods model with a complex $Q_c$, equivalent to rotating the circle [2, 4].
+In the ideal model with real $Q_c$, the on-resonance transmission amplitude is $S_{21}(f_0)=1-Q_l/Q_c=Q_l/Q_i$, so the dip depth indicates the coupling regime. Backgrounds and complex coupling can change the measured circle and phase. In the complex plane, $S_{21}$ traces a circle of diameter $Q_l/Q_c$ that touches the off-resonance point $(1, 0)$. Impedance mismatch around the coupler makes the resonance asymmetric, which fitting methods model with a complex $Q_c$, equivalent to rotating the circle [2, 4].
 
 ![Hanger S21 response](figures/s21_hanger_response.png)
 
@@ -230,13 +230,13 @@ Because each hanger resonator only notches out a narrow band, many quarter-wave 
 
 The bare frequency formulas are a starting point. Several effects shift the actual frequency:
 
-- **Coupling capacitance.** A capacitance $C_c$ at an open end adds to $C$, lowering the frequency by $\delta f/f_0 \approx -C_c/(2C)$. An in-line half-wave resonator has a coupling capacitor at each end, so both contribute.
-- **Open-end fringing.** Fringing fields at an open end act as a small extra length, typically micrometers to tens of micrometers, depending on the gap.
-- **Kinetic inductance.** With kinetic-inductance fraction $\alpha_k = L_k'/(L_m' + L_k')$, the frequency drops to $f_0\sqrt{1 - \alpha_k}$. Since $L_k$ depends on temperature, so does this shift.
+- **Coupling capacitance.** For weak loading ($C_c \ll C$), a capacitance $C_c$ at an open-end voltage antinode adds to the mode-equivalent capacitance $C$, lowering the frequency by $\delta f/f_0 \approx -C_c/(2C)$. An in-line half-wave resonator has a coupling capacitor at each end, so both contribute.
+- **Open-end fringing.** Fringing fields at an open end alter the boundary condition and are often represented approximately as an added electrical length; the correction depends on the cross-section and surrounding layout.
+- **Kinetic inductance.** Define the kinetic-inductance fraction $\alpha_k = L_k'/(L_m' + L_k')$. Relative to the frequency calculated with only $L_m'$ and unchanged capacitance, including $L_k'$ changes the frequency to $f_\mathrm{bare}\sqrt{1-\alpha_k}$. Since $L_k'$ can depend on temperature, the shift can also be temperature dependent.
 - **Bends and meanders.** The effective length is close to the centerline length, but closely spaced turns couple to each other and shift the frequency slightly.
 - **Two-level systems.** A weak, temperature-dependent frequency shift is a standard signature of TLS loss [3, 5].
 
-In practice the final length is tuned with electromagnetic simulation, and systematic offsets are calibrated from measurements of earlier devices.
+In a design workflow, the length is commonly refined with electromagnetic simulation; process-dependent offsets can be calibrated using measured test structures from the same fabrication process.
 
 ### Electrical length
 
@@ -246,7 +246,7 @@ $$
 \theta = \beta\ell = \frac{2\pi\ell}{\lambda} = \frac{\omega\ell}{v_\mathrm{p}} .
 $$
 
-At the fundamental, $\theta = \pi$ (180°) for a half-wave resonator and $\theta = \pi/2$ (90°) for a quarter-wave resonator. In both cases $\theta$ scales linearly with frequency, so a small length change $\delta\ell$ shifts the frequency by
+At the fundamental, $\theta = \pi$ (180°) for a half-wave resonator and $\theta = \pi/2$ (90°) for a quarter-wave resonator. For a nondispersive line, $\theta$ scales linearly with frequency. Under that approximation, a small length change $\delta\ell$ shifts the frequency by
 
 $$
 \frac{\delta f}{f_0} = -\frac{\delta\ell}{\ell}.
@@ -261,7 +261,7 @@ The *fractional* sensitivity is the same for both types. In absolute terms, a 1 
 
 | Consideration | Half-wave | Quarter-wave |
 |---|---|---|
-| Length at a given $f_0$ | $\lambda/2$ (10.0 mm at 6 GHz on Si) | $\lambda/4$ (5.0 mm), half the area |
+| Length at a given $f_0$ | $\lambda/2$ (10.0 mm at 6 GHz on Si) | $\lambda/4$ (5.0 mm); can reduce resonator footprint |
 | Spectrum | all harmonics: $f_0, 2f_0, 3f_0, \ldots$ | odd harmonics only: $f_0, 3f_0, 5f_0, \ldots$ |
 | Voltage antinodes (fundamental) | both ends | open end |
 | Current antinode (fundamental) | center | shorted end |
@@ -272,7 +272,7 @@ The *fractional* sensitivity is the same for both types. In absolute terms, a 1 
 
 A **half-wave** resonator is the natural choice for an in-line transmission measurement, for a quantum bus with qubits at the two voltage antinodes, or when a DC-isolated center conductor is needed.
 
-A **quarter-wave** resonator is the natural choice when chip area matters and many resonators share one feedline, as in multiplexed qubit readout. Its sparser spectrum keeps the first higher mode at $3f_0$, far from the operating band.
+A **quarter-wave** resonator is the natural choice when chip area matters and many resonators share one feedline, as in multiplexed qubit readout. In the ideal nondispersive model its next resonance is at $3f_0$; whether this is sufficiently separated from other device bands must be checked for the complete design.
 
 ## Design Considerations
 
@@ -303,15 +303,15 @@ All numbers are reproduced by [`figures/generate_doc_figures.py`](figures/genera
 
 ### Loss and power
 
-- **Geometry and surface loss.** A wider $w$ and $s$ at the same $Z_0$ reduce surface participation, and so TLS loss, at the cost of area and stronger coupling to box modes. This holds for both resonator types.
-- **Power dependence.** TLS loss saturates at high field, so $Q_i$ is typically reported both at the single-photon level (relevant for qubits) and at high power. The average photon number in a resonator driven with input power $P_\mathrm{in}$ at the feedline is [7]
+- **Geometry and surface loss.** At fixed aspect ratio in an ideal scale-invariant model, increasing $w$ and $s$ changes the field length scale and can reduce participation in fixed-thickness lossy surface layers. The actual TLS and conductor-loss changes depend on interface thicknesses, film properties, and layout; package-mode frequencies are primarily set by the package geometry.
+- **Power dependence.** TLS loss saturates at high field, so $Q_i$ is typically reported both at the single-photon level (relevant for qubits) and at high power. For an on-resonance coherent drive, the average photon number is [7]
 
   $$
   \langle n \rangle = \frac{2 Q_l^2}{Q_c}\,\frac{P_\mathrm{in}}{\hbar\omega_0^2},
   $$
 
   where $Q_c$ is the total coupling quality factor. The formula applies to a hanger and to a symmetric in-line resonator driven from one port. For $f_0 = 6$ GHz, $Q_l = 10^5$, and $Q_c = 2\times10^5$, an input power of −140 dBm at the chip gives $\langle n \rangle \approx 7$.
-- **Temperature.** Measurements are normally done well below $T_c/10$ to suppress thermal quasiparticles. The temperature dependence of $f_0$ and $Q_i$ helps separate TLS loss from quasiparticle loss.
+- **Temperature.** Measurements are generally made at temperatures well below the superconducting gap scale (often well below $T_c/10$), but the required temperature depends on material, frequency, and the desired quasiparticle population. The temperature dependence of $f_0$ and $Q_i$ helps separate TLS loss from quasiparticle loss.
 
 ### From analytical design to simulation
 

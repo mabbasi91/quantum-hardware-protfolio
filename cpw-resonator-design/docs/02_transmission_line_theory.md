@@ -8,7 +8,7 @@ A CPW is a *distributed* structure. A voltage or current disturbance does not ap
 
 When the cross-section and materials are uniform along the line and the dominant mode is quasi-TEM (see [CPW Fundamentals](01_cpw_fundamentals.md)), the three-dimensional field problem reduces to a one-dimensional **transmission-line model**. This model captures propagation, reflection, and power flow while keeping the finite travel time.
 
-Let $z$ be the position along the line, increasing from source toward load, and $t$ be time. The line voltage $V(z,t)$ is the potential of the center conductor relative to the grounds at position $z$. The line current $I(z,t)$ is the current on the center conductor in the $+z$ direction; an equal and opposite return current flows on the grounds.
+Let $z$ be the position along the line, increasing from source toward load, and $t$ be time. The line voltage $V(z,t)$ is the potential of the center conductor relative to the grounds at position $z$. The line current $I(z,t)$ is the current on the center conductor in the $+z$ direction; the total return current on the grounds is equal and opposite. In a symmetric CPW mode it divides equally between the two grounds, but that split need not hold for asymmetric geometry or excitation.
 
 ## Distributed circuit parameters
 
@@ -51,7 +51,7 @@ $$
 \frac{\partial I}{\partial z} = -G' V - C' \frac{\partial V}{\partial t}.
 $$
 
-The minus signs mean that voltage and current both decrease along the direction of propagation: the series elements drop voltage and the shunt elements draw current away.
+The minus signs encode the voltage drop along the series branch and the current drawn by the shunt branch. They do not imply that voltage and current decrease monotonically with position: a standing wave is a superposition of forward and reflected waves.
 
 For sinusoidal signals, use phasors with the engineering convention
 
@@ -103,11 +103,11 @@ $$
 Z_0 = \sqrt{\frac{L'}{C'}} ,
 $$
 
-which is real. $Z_0$ measures the balance between magnetic and electric energy storage: increasing $L'$ (for example, through kinetic inductance) raises $Z_0$; increasing $C'$ (a wider center strip or narrower gaps) lowers it. For a CPW, $L'$ and $C'$ are set by the cross-section; closed-form conformal-mapping expressions are given in [CPW Fundamentals](01_cpw_fundamentals.md#quasi-static-design-equations).
+which is real. $Z_0$ measures the balance between magnetic and electric energy storage. Under the lossless model, increasing $L'$ raises $Z_0$ and increasing $C'$ lowers it. Geometry changes generally affect both parameters; for a conventional CPW, a wider center strip relative to the slots often increases $C'$ and lowers $Z_0$, but the trend is conditional on the rest of the cross-section and material stack. For a CPW, $L'$ and $C'$ are set by the cross-section; closed-form conformal-mapping expressions are given in [CPW Fundamentals](01_cpw_fundamentals.md#quasi-static-design-equations).
 
 ## Propagation constant and wave velocity
 
-For a forward wave $e^{-\gamma z} = e^{-\alpha z}e^{-j\beta z}$, the amplitude decays as $e^{-\alpha z}$ and the phase advances by $\beta$ per unit length. The phase velocity and guided wavelength are
+For a forward wave $e^{-\gamma z} = e^{-\alpha z}e^{-j\beta z}$, the amplitude decays as $e^{-\alpha z}$ and the phase factor accumulates as $e^{-j\beta z}$ (a spatial phase lag of $\beta z$ under the stated phasor convention). The phase velocity and guided wavelength are
 
 $$
 v_\mathrm{p} = \frac{\omega}{\beta},
@@ -125,9 +125,9 @@ $$
 v_\mathrm{p} = \frac{1}{\sqrt{L'C'}} .
 $$
 
-The phase velocity is independent of frequency, so the line is dispersion-free and the group velocity equals the phase velocity. With frequency-dependent $L'$, $C'$, or significant loss, the two velocities differ.
+If $L'$ and $C'$ are frequency independent and the line is lossless, then $v_\mathrm{p}$ is frequency independent and the ideal line is nondispersive, so group and phase velocities are equal. Frequency-dependent parameters or appreciable loss can make phase propagation dispersive; for a lossy line, group velocity also requires careful interpretation.
 
-This connects directly to the effective permittivity of [CPW Fundamentals](01_cpw_fundamentals.md#quasi-tem-propagation): for a nonmagnetic CPW without kinetic inductance, $c^2 L'C' = \varepsilon_\mathrm{eff}$. If the inductance includes a kinetic part, $L' = L_m' + L_k'$, the phase velocity drops by a further factor $\sqrt{1 - \alpha_k}$, where $\alpha_k = L_k'/L'$ is the kinetic-inductance fraction.
+This connects directly to the effective permittivity of [CPW Fundamentals](01_cpw_fundamentals.md#quasi-tem-propagation): for a nonmagnetic quasi-TEM CPW without appreciable kinetic inductance, $c^2 L'C' \approx \varepsilon_\mathrm{eff}$. If $L'=L_m'+L_k'$ includes kinetic inductance, define $\alpha_k=L_k'/L'$. Relative to the same geometry with only magnetic inductance $L_m'$, and assuming $C'$ is unchanged, the phase velocity is reduced by $\sqrt{L_m'/L'}=\sqrt{1-\alpha_k}$.
 
 **Summary for the reference geometry** ($w = 10$ µm, $s = 6$ µm on silicon, from the worked example in [CPW Fundamentals](01_cpw_fundamentals.md)): $L' \approx 424$ nH/m, $C' \approx 163$ pF/m, $Z_0 \approx 51$ Ω, and $v_\mathrm{p} \approx 0.40\,c$.
 
@@ -161,7 +161,7 @@ Z_\mathrm{in}(\ell) = Z_0\,\frac{Z_L + Z_0\tanh\gamma\ell}{Z_0 + Z_L\tanh\gamma\
 Z_0\,\frac{Z_L + jZ_0\tan\beta\ell}{Z_0 + jZ_L\tan\beta\ell}.
 $$
 
-For short- and open-circuited sections ("stubs") of a lossless line, this reduces to
+For electrically short or open-circuited sections ("stubs") of a lossless line, this reduces to
 
 $$
 Z_\mathrm{in}^\mathrm{short} = jZ_0\tan\beta\ell,
@@ -173,10 +173,10 @@ $$
 
 *Figure 3. Input reactance of lossless shorted and open stubs. A shorted stub behaves like an inductor when short and its reactance diverges at $\ell = \lambda/4$. An open stub behaves like a capacitor when short, passes through zero at $\ell = \lambda/4$, and diverges at $\ell = \lambda/2$.*
 
-The poles of these input impedances are the key result for this project. A quarter-wavelength section shorted at one end ($\beta\ell = \pi/2$) presents an open circuit at its other end, and so does a half-wavelength section that is itself open at the far end ($\beta\ell = \pi$). Near these frequencies each section behaves exactly like a parallel *LC* circuit. These are the **quarter-wave** and **half-wave resonators**, analyzed in [CPW Resonators](03_cpw_resonators.md). Two related tools follow from the same equations:
+The poles of these input impedances are the key result for this project. A quarter-wavelength section shorted at one end ($\beta\ell = \pi/2$) presents an open circuit at its other end, and so does a half-wavelength section that is itself open at the far end ($\beta\ell = \pi$). Near an impedance pole, the terminal response can be approximated by that of a parallel *LC* circuit over a sufficiently narrow frequency range. These are the **quarter-wave** and **half-wave resonators**, analyzed in [CPW Resonators](03_cpw_resonators.md). Two related tools follow from the same equations:
 
 - **Quarter-wave transformer.** For $\beta\ell = \pi/2$, $Z_\mathrm{in} = Z_0^2/Z_L$. A quarter-wave section with $Z_0 = \sqrt{Z_1 Z_2}$ matches two impedances at one frequency.
-- **Short stubs as lumped elements.** A shorted stub with $\beta\ell \ll 1$ is an inductor, $L \approx L'\ell$. An open stub is a capacitor, $C \approx C'\ell$. This is how compact on-chip reactances are often made.
+- **Short stubs as lumped elements.** For $\beta\ell \ll 1$, a shorted stub is approximately an inductor, $L \approx L'\ell$, while an open stub is approximately a capacitor, $C \approx C'\ell$. This is one way to realize compact on-chip reactances.
 
 ## Loss and quality factor
 
@@ -191,12 +191,12 @@ $$
 with conductor and dielectric contributions $\alpha_c$ and $\alpha_d$. For resonators it is more natural to express loss as a quality factor. A resonator built from a low-loss line, with no other loss channels, has
 
 $$
-Q = \frac{\beta}{2\alpha},
-\qquad\text{and for dielectric loss alone,}\qquad
-Q_d = \frac{1}{\tan\delta}.
+Q_i \approx \frac{\beta}{2\alpha},
+\qquad\text{and for dielectric loss,}\qquad
+\frac{1}{Q_d} = \tan\delta_\mathrm{eff} = \sum_i p_i\tan\delta_i.
 $$
 
-With $\tan\delta = 10^{-6}$, a typical value for the participation-weighted loss of a good silicon CPW at low power, $Q_d = 10^6$. This connection between distributed attenuation and resonator $Q$ is what makes CPW resonators sensitive probes of material loss.
+As an illustration, if the effective, participation-weighted dielectric loss tangent is $10^{-6}$, the dielectric-limited quality factor is $Q_d=10^6$. This is an example value, not a universal property of silicon CPWs. This connection between distributed attenuation and resonator $Q$ is what makes CPW resonators sensitive probes of material loss.
 
 The physical origins of $R'$ and $G'$ in a superconducting CPW (two-level systems, quasiparticles, vortices, radiation) are discussed in [CPW Fundamentals](01_cpw_fundamentals.md#loss-channels).
 
@@ -204,7 +204,7 @@ The physical origins of $R'$ and $G'$ in a superconducting CPW (two-level system
 
 The RLGC parameters summarize how a given cross-section stores and dissipates energy. Geometry (center width, gap, thickness, ground extent) sets $L'$ and $C'$ through the field distribution, and with it $Z_0$ and $v_\mathrm{p}$. Materials set $R'$ (through the surface impedance), $G'$ (through the participation-weighted loss tangents), and the kinetic part of $L'$. These quantities are coupled: changing the geometry moves both electric and magnetic fields, so no single dimension controls impedance or loss independently.
 
-The RLGC model assumes a uniform line. Where that breaks down (bends, couplers, finite grounds, packages), full-wave simulation is needed; see [Limitations of the simplified picture](01_cpw_fundamentals.md#limitations-of-the-simplified-picture).
+The RLGC model assumes a uniform line. Where that breaks down (bends, couplers, finite grounds, packages), full-wave simulation is often appropriate; see [Limitations of the simplified picture](01_cpw_fundamentals.md#limitations-of-the-simplified-picture).
 
 ## References
 
